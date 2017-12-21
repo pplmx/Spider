@@ -47,30 +47,35 @@ public class GrabDouban implements Runnable {
     }
 
     private void parse(String url) {
-        /*String html = Spider.pickData(url);*/
-        String html = Spider.pick4data(url,"183.151.145.78","8118");
+        String html = Spider.pickData(url);
+        /*String html = Spider.pick4data(url,"220.249.185.178","9999");*/
         Document doc = Jsoup.parse(html);
         Elements elements = doc.select("ul.subject-list li.subject-item div.info");
         for (Element element : elements) {
             String name = element.select("h2 a").attr("title");
-            String[] pub = element.select("div.pub").text().split("/");
-            String price = pub[pub.length - 1];
-            String date = pub[pub.length - 2];
-            String press = pub[pub.length - 3];
-            StringBuilder author = new StringBuilder();
-            int loop = 3;
-            for (int i = 0; i < pub.length - loop; i++) {
-                author.append(pub[i]);
+            // pub和books变量需要被锁
+            synchronized (GrabDouban.class){
+                String[] pub = element.select("div.pub").text().split("/");
+                // 译者或审校,不一定有;所以只能反向获取值
+                // 并将作者和审校或译者拼接,都算作author值
+                String price = pub[pub.length - 1];
+                String date = pub[pub.length - 2];
+                String press = pub[pub.length - 3];
+                StringBuilder author = new StringBuilder();
+                int loop = 3;
+                for (int i = 0; i < pub.length - loop; i++) {
+                    author.append(pub[i]);
+                }
+                String score = element.select("div.star span.rating_nums").text();
+                String num = element.select("div.star span.pl").text();
+                // 截取评价人数
+                String regEx = "[^0-9]";
+                Pattern p = Pattern.compile(regEx);
+                Matcher m = p.matcher(num);
+                num = m.replaceAll("").trim();
+                Book book = new Book("", name, score, num, author.toString(), press, date, price);
+                books.add(book);
             }
-            String score = element.select("div.star span.rating_nums").text();
-            String num = element.select("div.star span.pl").text();
-            // 截取评价人数
-            String regEx = "[^0-9]";
-            Pattern p = Pattern.compile(regEx);
-            Matcher m = p.matcher(num);
-            num = m.replaceAll("").trim();
-            Book book = new Book("", name, score, num, author.toString(), press, date, price);
-            books.add(book);
         }
     }
 

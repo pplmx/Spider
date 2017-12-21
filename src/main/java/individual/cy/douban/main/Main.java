@@ -2,13 +2,14 @@ package individual.cy.douban.main;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import individual.cy.douban.pojo.Book;
+import individual.cy.douban.utils.ExportExcel;
 import individual.cy.douban.utils.Spider;
 import individual.cy.douban.web.GrabDouban;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.util.List;
-import java.util.Vector;
+import java.io.File;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -32,8 +33,8 @@ public class Main {
         List<Book> books = new Vector<>();
         // 实现每一页一个线程获取数据
         // 获取总页数
-        /*String html = Spider.pickData("https://book.douban.com/tag/%E7%BC%96%E7%A8%8B");*/
-        String html = Spider.pick4data("https://book.douban.com/tag/%E7%BC%96%E7%A8%8B","183.151.145.78","8118");
+        String html = Spider.pickData("https://book.douban.com/tag/%E7%BC%96%E7%A8%8B");
+        /*String html = Spider.pick4data("https://book.douban.com/tag/%E7%BC%96%E7%A8%8B","220.249.185.178","9999");*/
         Document doc = Jsoup.parse(html);
         int totalPage = Integer.parseInt(doc.select("div.paginator > a").last().text());
         StringBuilder sb;
@@ -44,8 +45,27 @@ public class Main {
             sb.append("&type=T");
             douban.setUrl(sb.toString());
             executorService.execute(douban);
+            // 防止爬取速度太快,IP被封
             Thread.sleep(3000L);
         }
         executorService.shutdown();
+        TreeSet<Book> treeSet = new TreeSet<>(books);
+        Integer no = 0;
+        List<Book> sortedBooks = new ArrayList<>();
+        for (Book book : treeSet) {
+            book.setId((no++).toString());
+            sortedBooks.add(book);
+        }
+        Map<String,String> title = new HashMap<>(16);
+        title.put("id", "序号");
+        title.put("name", "书名");
+        title.put("score", "评分");
+        title.put("num", "评价人数");
+        title.put("author", "作者");
+        title.put("press", "出版社");
+        title.put("date", "出版日期");
+        title.put("price", "价格");
+        String sheet = "豆瓣编程书籍排行";
+        ExportExcel.excelExport(sortedBooks,title,sheet);
     }
 }
