@@ -34,10 +34,13 @@ public class GrabDouban implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("url = " + url);
+        System.out.println("Thread.currentThread().getName() = " + Thread.currentThread().getName());
         parse(url);
     }
 
     private void parse(String url) {
+        System.out.println("books = " + books.size());
         String html = Spider.pickData(url);
         Document doc = Jsoup.parse(html);
         Elements elements = doc.select("ul.subject-list li.subject-item div.info");
