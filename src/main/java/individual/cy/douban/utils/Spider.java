@@ -88,7 +88,8 @@ public class Spider {
              //客户端执行httpGet方法，返回响应
              CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
             //得到服务响应状态码
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            int status = 200;
+            if (httpResponse.getStatusLine().getStatusCode() == status) {
                 HttpEntity entity = httpResponse.getEntity();
                 if (entity != null) {
                     return EntityUtils.toString(entity, "utf-8");

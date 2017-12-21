@@ -25,12 +25,19 @@ import java.util.regex.Pattern;
  */
 public class GrabDouban implements Runnable {
 
-    public static volatile List<Book> books = new Vector<>();
+    @Getter
+    @Setter
+    private List<Book> books = new Vector<>();
 
     @Getter
     @Setter
     private String url;
 
+    private GrabDouban(){}
+
+    public GrabDouban(List<Book> books){
+        this.books = books;
+    }
 
     @Override
     public void run() {
@@ -40,8 +47,8 @@ public class GrabDouban implements Runnable {
     }
 
     private void parse(String url) {
-        System.out.println("books = " + books.size());
-        String html = Spider.pickData(url);
+        /*String html = Spider.pickData(url);*/
+        String html = Spider.pick4data(url,"183.151.145.78","8118");
         Document doc = Jsoup.parse(html);
         Elements elements = doc.select("ul.subject-list li.subject-item div.info");
         for (Element element : elements) {
@@ -51,7 +58,8 @@ public class GrabDouban implements Runnable {
             String date = pub[pub.length - 2];
             String press = pub[pub.length - 3];
             StringBuilder author = new StringBuilder();
-            for (int i = 0; i < pub.length - 3; i++) {
+            int loop = 3;
+            for (int i = 0; i < pub.length - loop; i++) {
                 author.append(pub[i]);
             }
             String score = element.select("div.star span.rating_nums").text();
@@ -71,7 +79,7 @@ public class GrabDouban implements Runnable {
         // 这里是单线程执行的,结果正常返回,已打印输出
         GrabDouban gd = new GrabDouban();
         gd.parse("https://book.douban.com/tag/%E7%BC%96%E7%A8%8B");
-        System.out.println("GrabDouban.books = " + GrabDouban.books);
+        System.out.println("gd.getBooks() = " + gd.getBooks());
         // 获取总页数
 //        String html = Spider.pickData("https://book.douban.com/tag/%E7%BC%96%E7%A8%8B");
 //        Document doc = Jsoup.parse(html);
