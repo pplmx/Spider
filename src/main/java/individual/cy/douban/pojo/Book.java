@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import java.util.Comparator;
+
 /**
  * Created with IntelliJ IDEA.
  *
@@ -17,7 +19,7 @@ import lombok.ToString;
 @Data
 @ToString
 @AllArgsConstructor
-public class Book implements Comparable {
+public class Book {
     /**
      * 序号
      */
@@ -51,19 +53,4 @@ public class Book implements Comparable {
      */
     private String price;
 
-    @Override
-    public int compareTo(Object o) {
-        Book book = (Book) o;
-        // 评分排序优先
-        double num1 = Double.parseDouble(book.score);
-        double num2 = Double.parseDouble(this.score);
-        int result = Double.compare(num1, num2);
-        if (result == 0) {
-            // 评分相同,则以评价人数排序
-            double num3 = Double.parseDouble(book.num);
-            double num4 = Double.parseDouble(this.num);
-            result = Double.compare(num3, num4);
-        }
-        return result;
-    }
 }

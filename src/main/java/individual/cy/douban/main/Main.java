@@ -2,6 +2,7 @@ package individual.cy.douban.main;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import individual.cy.douban.pojo.Book;
+import individual.cy.douban.pojo.BookComparator;
 import individual.cy.douban.utils.ExportExcel;
 import individual.cy.douban.utils.Spider;
 import individual.cy.douban.web.GrabDouban;
@@ -49,14 +50,18 @@ public class Main {
             Thread.sleep(3000L);
         }
         executorService.shutdown();
-        TreeSet<Book> treeSet = new TreeSet<>(books);
+        // 排序
+        books.sort(new BookComparator());
+        // 添加编号
+        List<Book> noBooks = new ArrayList<>();
         Integer no = 0;
-        List<Book> sortedBooks = new ArrayList<>();
-        for (Book book : treeSet) {
-            book.setId((no++).toString());
-            sortedBooks.add(book);
+        for (Book book : books) {
+            book.setId((++no).toString());
+            noBooks.add(book);
         }
-        Map<String,String> title = new HashMap<>(16);
+        // 截取前40个
+        noBooks = noBooks.subList(0,40);
+        Map<String, String> title = new HashMap<>(16);
         title.put("id", "序号");
         title.put("name", "书名");
         title.put("score", "评分");
@@ -66,6 +71,6 @@ public class Main {
         title.put("date", "出版日期");
         title.put("price", "价格");
         String sheet = "豆瓣编程书籍排行";
-        ExportExcel.excelExport(sortedBooks,title,sheet);
+        ExportExcel.excelExport(noBooks, title, sheet);
     }
 }
