@@ -26,6 +26,7 @@ public class Main {
             TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
 
     public static void main(String[] args) {
+        // 实现每一页一个线程获取数据
         // 获取总页数
         String html = Spider.pickData("https://book.douban.com/tag/%E7%BC%96%E7%A8%8B");
         Document doc = Jsoup.parse(html);
