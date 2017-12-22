@@ -1,4 +1,4 @@
-- 进行IP代理(最初未使用代理,本机IP被封了)
+- 进行IP代理(未使用代理,http://www.xicidaili.com/找不到稳定可用的代理)
 - 通过HttpClient获取到请求页面的String字符串
 - 通过jsoup解析
 - (解析需要自己在页面查看源代码,分析DOM结构)
