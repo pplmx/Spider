@@ -61,7 +61,7 @@ public class Main {
         }
         // 截取前40个
         noBooks = noBooks.subList(0,40);
-        Map<String, String> title = new HashMap<>(16);
+        Map<String, String> title = new LinkedHashMap<>(16);
         title.put("id", "序号");
         title.put("name", "书名");
         title.put("score", "评分");
