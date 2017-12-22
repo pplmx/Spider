@@ -9,7 +9,6 @@ import individual.cy.douban.web.GrabDouban;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.*;
 

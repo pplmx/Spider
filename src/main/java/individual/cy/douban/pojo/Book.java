@@ -2,10 +2,7 @@ package individual.cy.douban.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-
-import java.util.Comparator;
 
 /**
  * Created with IntelliJ IDEA.
