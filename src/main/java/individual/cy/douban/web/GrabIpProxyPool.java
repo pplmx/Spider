@@ -9,8 +9,10 @@ package individual.cy.douban.web;
  * @version: X
  * Description:
  */
-public class GrabIpProxyPool {
+public final class GrabIpProxyPool {
 
-
+    public void common() {
+        System.out.println("===============");
+    }
 
 }
